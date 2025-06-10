@@ -73,45 +73,6 @@ func maxChunks(data []int) int {
 	wg.Wait()
 	// fmt.Println(subSlices) // Output: [[1 2 3 4] [5 6 7] [8 9 10]]
 	return maximum(sL)
-
-	/*
-	   // ваш код здесь
-	   // создайте переменную типа sync.WaitGroup и используйте её при запуске и ожидании горутин.
-	   var wg sync.WaitGroup
-
-	   var total []int
-
-	   	if len(data) == 0 || len(data) == 1 {
-	   		return 0
-	   	}
-
-	   // var div [][]int
-
-	   	for i := 0; i < len(data); i += CHUNKS {
-	   		end := i + CHUNKS
-
-	   		if end > len(data) {
-	   			end = len(data)
-	   		}
-	   		wg.Add(1)
-	   		go func(i int) {
-	   			defer wg.Done()
-
-	   			// end := i + CHUNKS
-
-	   			// if end > len(data) {
-	   			// 	end = len(data)
-	   			// }
-
-	   			// div = append(div, data[i:end])
-	   			total = append(total, slices.Max(data[i:end]))
-	   		}(i)
-	   	}
-
-	   // fmt.Printf("%#v\n", div)
-	   wg.Wait()
-	   return slices.Max(total)
-	*/
 }
 
 func main() {
