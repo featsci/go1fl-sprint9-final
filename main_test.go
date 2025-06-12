@@ -3,78 +3,48 @@ package main
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	_ "github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 // Пишите тесты в этом файле
 func TestGenerateRandomElements(t *testing.T) {
-	tests := []struct {
-		name     string
-		a, b     int
+	cases := []struct {
+		desc     string
+		vol      int
 		expected int
 	}{
-		{"positive", 2, 3, 5}, // go test -run '^TestAdd_TableDriven$/positive' ./...
-		{"with zero", 0, 5, 5},
-		{"negative", -1, -2, -3},
+		{"positive", 2, 2},
+		{"with zero", 0, 0},
+		{"negative", -1, 0},
 	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got := Add(tt.a, tt.b)
-			assert.Equalf(t, tt.expected, got, "Add(%d, %d) = %d; want %d", tt.a, tt.b, got, tt.expected)
+	for _, tt := range cases {
+		t.Run(tt.desc, func(t *testing.T) {
+			got := generateRandomElements(tt.vol)
+			require.Equal(t, len(got), tt.expected)
+
 		})
 	}
 }
 
 func TestMaximum(t *testing.T) {
-	tests := []struct {
-		name     string
-		a, b     int
+	// sL := []int{1, 2, 3}
+	cases := []struct {
+		desc     string
+		maximum  []int
 		expected int
 	}{
-		{"positive", 2, 3, 5}, // go test -run '^TestAdd_TableDriven$/positive' ./...
-		{"with zero", 0, 5, 5},
-		{"negative", -1, -2, -3},
+		{"positive", []int{1, 2, 3}, 3},
+		{"with empty", []int{}, 0},
+		{"single", []int{1}, 0},
 	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got := Add(tt.a, tt.b)
-			assert.Equalf(t, tt.expected, got, "Add(%d, %d) = %d; want %d", tt.a, tt.b, got, tt.expected)
+	for _, tt := range cases {
+		t.Run(tt.desc, func(t *testing.T) {
+			got := maximum(tt.maximum)
+			require.Equal(t, got, tt.expected)
+
 		})
 	}
 }
-
-/*
-func Add(a, b int) int {
-	return a + b
-}
-
-func TestAddTableDriven(t *testing.T) {
-	tests := []struct {
-		name     string
-		a, b     int
-		expected int
-	}{
-		{"positive", 2, 3, 5}, // go test -run '^TestAdd_TableDriven$/positive' ./...
-		{"with zero", 0, 5, 5},
-		{"negative", -1, -2, -3},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got := Add(tt.a, tt.b)
-			assert.Equalf(t, tt.expected, got, "Add(%d, %d) = %d; want %d", tt.a, tt.b, got, tt.expected)
-		})
-	}
-}
-
-func TestAdd(t *testing.T) {
-	got := Add(2, 3)
-	want := 5
-
-	if got != want {
-		t.Errorf("Add(2, 3) = %d; want %d", got, want)
-	}
-}
-*/

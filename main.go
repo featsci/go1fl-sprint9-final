@@ -16,10 +16,11 @@ const (
 // generateRandomElements generates random elements.
 func generateRandomElements(size int) []int {
 	// ваш код здесь
-	s := make([]int, size)
-	if size == 0 {
-		return s
+	if size <= 0 {
+		return []int{}
 	}
+	s := make([]int, size)
+
 	for i := range size {
 		s[i] = rand.Intn(SIZE * SIZE)
 		// s[i] = 0
