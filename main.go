@@ -13,89 +13,66 @@ const (
 	CHUNKS = 8
 )
 
-// generateRandomElements generates random elements.
 func generateRandomElements(size int) []int {
 	// ваш код здесь
 	if size <= 0 {
 		return []int{}
 	}
 	s := make([]int, size)
-
 	for i := range size {
-		s[i] = rand.Intn(SIZE * SIZE)
-		// s[i] = 0
+		s[i] = rand.Int()
 	}
 	return s
 }
 
-// maximum returns the maximum number of elements.
 func maximum(data []int) int {
-	// ваш код здесь
-	// Не забудьте учесть все возможные крайние случаи: пустой слайс, слайс с одним элементом и так далее.
-	// fmt.Println(len(data))
-	if len(data) == 0 || len(data) == 1 {
+	if len(data) == 0 {
 		return 0
 	}
 	return slices.Max(data)
 }
 
-// maxChunks returns the maximum number of elements in a chunks.
 func maxChunks(data []int) int {
-	// ваш код здесь
-	// создайте переменную типа sync.WaitGroup и используйте её при запуске и ожидании горутин.
-
-	if len(data) == 0 || len(data) == 1 {
+	if len(data) == 0 {
 		return 0
 	}
-
 	var wg sync.WaitGroup
-	// mySlice := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}
-	// numSubSlices := 3
 	subSlices := make([][]int, CHUNKS)
 	sliceLen := len(data)
 	subSliceSize := sliceLen / CHUNKS
 	remainder := sliceLen % CHUNKS
 	start := 0
-	var sL []int
+	sL := make([]int, CHUNKS)
 
 	for i := 0; i < CHUNKS; i++ {
+		end := start + subSliceSize
+		if i < remainder {
+			end++
+		}
+		subSlices[i] = data[start:end]
+		start = end
 		wg.Add(1)
-		go func(i int) {
+
+		go func(i int, tS []int) {
 			defer wg.Done()
-			end := start + subSliceSize
-			if i < remainder {
-				end++
-			}
-			subSlices[i] = data[start:end]
-			start = end
-			sL = append(sL, maximum(subSlices[i]))
-		}(i)
+			sL[i] = maximum(tS)
+		}(i, subSlices[i])
 	}
 	wg.Wait()
-	// fmt.Println(subSlices) // Output: [[1 2 3 4] [5 6 7] [8 9 10]]
 	return maximum(sL)
 }
 
 func main() {
 	fmt.Printf("Генерируем %d целых чисел\n", SIZE)
-	// ваш код здесь
 	g := generateRandomElements(SIZE)
-	// fmt.Println(g)
-
 	fmt.Println("Ищем максимальное значение в один поток")
-	// ваш код здесь
 	start := time.Now()
 	max := maximum(g)
 	elapsed := time.Since(start)
-
-	// fmt.Println(m)
 	fmt.Printf("Максимальное значение элемента: %d\nВремя поиска: %d ms\n", max, elapsed)
-
 	fmt.Printf("Ищем максимальное значение в %d потоков\n", CHUNKS)
-	// ваш код здесь
 	start = time.Now()
 	max = maxChunks(g)
 	elapsed = time.Since(start)
-
 	fmt.Printf("Максимальное значение элемента: %d\nВремя поиска: %d ms\n", max, elapsed)
 }
